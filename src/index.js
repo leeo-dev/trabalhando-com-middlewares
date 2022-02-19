@@ -16,6 +16,14 @@ function findTodoById(todos, idTodo){
   return todos.find(todo => todo.id === idTodo)
 }
 
+function checksExistsUserAccount(request, response, next) {
+  const { username } = request.headers
+  const user = findUserByUsername(username)
+  if(!user) return response.status(404).json({ error: 'user not found!!'})
+  request.user = user
+  next()
+}
+
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
 
