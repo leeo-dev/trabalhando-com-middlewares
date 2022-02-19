@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const { v4: uuidv4, validate } = require('uuid');
+const { v4: uuidV4, validate } = require('uuid');
 
 const app = express();
 app.use(express.json());
@@ -9,20 +9,17 @@ app.use(cors());
 
 const users = [];
 
-function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+function findUserByUsername(username){
+  return users.find(user => user.username === username)
 }
 
-function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
-}
-
-function checksTodoExists(request, response, next) {
-  // Complete aqui
-}
 
 function findUserById(request, response, next) {
-  // Complete aqui
+  const { id } = request.params
+  const user = users.find(user => user.id === id)
+  if(!user) return response.status(404).json({ error: 'user not found!' })
+  request.user = user
+  next()
 }
 
 app.post('/users', (request, response) => {
@@ -35,7 +32,7 @@ app.post('/users', (request, response) => {
   }
 
   const user = {
-    id: uuidv4(),
+    id: uuidV4(),
     name,
     username,
     pro: false,
@@ -76,7 +73,7 @@ app.post('/todos', checksExistsUserAccount, checksCreateTodosUserAvailability, (
   const { user } = request;
 
   const newTodo = {
-    id: uuidv4(),
+    id: uuidV4(),
     title,
     deadline: new Date(deadline),
     done: false,
