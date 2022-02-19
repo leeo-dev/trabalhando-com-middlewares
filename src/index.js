@@ -12,14 +12,8 @@ const users = [];
 function findUserByUsername(username){
   return users.find(user => user.username === username)
 }
-
-
-function findUserById(request, response, next) {
-  const { id } = request.params
-  const user = users.find(user => user.id === id)
-  if(!user) return response.status(404).json({ error: 'user not found!' })
-  request.user = user
-  next()
+function findTodoById(todos, idTodo){
+  return todos.find(todo => todo.id === idTodo)
 }
 
 app.post('/users', (request, response) => {
