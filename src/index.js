@@ -31,6 +31,19 @@ function checksCreateTodosUserAvailability(request, response, next) {
   next()
 }
 
+function checksTodoExists(request, response, next) {
+  const { username } = request.headers
+  const { id } = request.params
+  const user = findUserByUsername(username)
+  if(!user) return response.status(404).json({ error: 'user not found!' })
+  if(!validate(id)) return response.status(400).json({ error: 'invalid id!' })
+  const todo = findTodoById(user.todos, id)
+  if(!todo) return response.status(404).json({ error: 'todo not found!' })
+  request.user = user
+  request.todo = todo
+  next()
+}
+
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
 
