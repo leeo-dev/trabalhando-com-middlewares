@@ -24,6 +24,13 @@ function checksExistsUserAccount(request, response, next) {
   next()
 }
 
+function checksCreateTodosUserAvailability(request, response, next) {
+  const freeLimit = 10
+  const { user } = request
+  if(!user.pro && user.todos.length === freeLimit) return response.status(403).json({ error: 'Please upgrade your plan!'})
+  next()
+}
+
 app.post('/users', (request, response) => {
   const { name, username } = request.body;
 
